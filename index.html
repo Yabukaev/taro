@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд кафе</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body class="bg-gray-100 p-5">
+    <!-- Закрепленный верхний бар -->
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50">
+        <div>
+            <p class="text-gray-800 font-semibold">📞 +7 (999) 123-45-67</p>
+            <a href="https://t.me/yabukaev" target="_blank" class="bg-blue-500 text-white px-3 py-2 rounded mt-2 inline-block">Telegram</a>
+        </div>
+        <button id="loginBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Войти</button>
+    </div>
+    
+    <div class="container mx-auto relative mt-24">
+        <h1 class="text-3xl font-bold mb-5 text-gray-800">Дашборд кафе</h1>
+        
+        <!-- Форма авторизации -->
+        <div id="loginForm" class="hidden absolute top-16 right-5 bg-white p-5 shadow-lg rounded-lg w-64">
+            <h2 class="text-lg font-semibold mb-3">Авторизация</h2>
+            <input type="text" id="username" placeholder="Логин" class="w-full mb-2 p-2 border rounded">
+            <input type="password" id="password" placeholder="Пароль" class="w-full mb-2 p-2 border rounded">
+            <button id="submitLogin" class="bg-blue-500 text-white w-full p-2 rounded">Войти</button>
+        </div>
+        
+        <!-- График сканирований QR-кодов -->
+        <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
+            <h2 class="text-xl font-semibold mb-3">Сканирования QR-кодов</h2>
+            <canvas id="qrChart"></canvas>
+            <p class="mt-2 text-gray-600">Новые пользователи: <span id="newUsers">120</span></p>
+            <p class="text-gray-600">Всего QR: <span id="totalQR">5000</span></p>
+            <p class="text-gray-600">Осталось QR: <span id="remainingQR">3800</span></p>
+        </div>
+        
+        <!-- Круговые графики пользователей -->
+        <div class="grid grid-cols-1 md-grid-cols-2 gap-5 mb-5">
+            <div class="bg-white p-5 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-3">Распределение пользователей по полу</h2>
+                <canvas id="genderChart"></canvas>
+            </div>
+            <div class="bg-white p-5 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold mb-3">Распределение пользователей по возрасту</h2>
+                <canvas id="ageChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Таблица пользователей -->
+        <div class="bg-white p-5 rounded-xl shadow-lg overflow-x-auto">
+            <h2 class="text-xl font-semibold mb-3">Список пользователей</h2>
+            <table class="w-full border-collapse border border-gray-300 text-xs md:text-sm lg:text-base">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">ID</th>
+                        <th class="border p-2">Телеграм</th>
+                        <th class="border p-2">Имя Фамилия</th>
+                        <th class="border p-2">Последнее сканирование</th>
+                        <th class="border p-2">Кол-во сканирований</th>
+                        <th class="border p-2">Дата рождения</th>
+                        <th class="border p-2">Возраст</th>
+                        <th class="border p-2">Пол</th>
+                    </tr>
+                </thead>
+                <tbody id="userTable">
+                    <!-- Данные будут загружены динамически -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("loginBtn").addEventListener("click", function() {
+            document.getElementById("loginForm").classList.toggle("hidden");
+        });
+
+        document.getElementById("submitLogin").addEventListener("click", function() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            alert("Логин: " + username + "\nПароль: " + password);
+        });
+
+        // Инициализация графиков
+        document.addEventListener("DOMContentLoaded", function() {
+            const qrCtx = document.getElementById("qrChart").getContext("2d");
+            new Chart(qrCtx, {
+                type: "line",
+                data: {
+                    labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+                    datasets: [
+                        {
+                            label: "Сканирования",
+                            data: [12, 19, 3, 5, 2, 3, 7],
+                            borderColor: "#36A2EB",
+                            fill: false
+                        },
+                        {
+                            label: "Новые пользователи",
+                            data: [5, 8, 2, 3, 1, 4, 6],
+                            borderColor: "#FF6384",
+                            fill: false
+                        }
+                    ]
+                }
+            });
+
+            const genderCtx = document.getElementById("genderChart").getContext("2d");
+            new Chart(genderCtx, {
+                type: "doughnut",
+                data: {
+                    labels: ["Мужчины", "Женщины", "Иное"],
+                    datasets: [{
+                        data: [45, 50, 5],
+                        backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"]
+                    }]
+                }
+            });
+
+            const ageCtx = document.getElementById("ageChart").getContext("2d");
+            new Chart(ageCtx, {
+                type: "doughnut",
+                data: {
+                    labels: ["<18", "18-25", "26-35", "36-45", "46+"],
+                    datasets: [{
+                        data: [10, 30, 25, 20, 15],
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"]
+                    }]
+                }
+            });
+        });
+    </script>
+</body>
+</html>
