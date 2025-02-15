@@ -7,10 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-<body class="bg-gray-100 p-5">
-    <!-- Закрепленный верхний бар -->
-    <div class="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50">
+<body class="bg-gray-100 p-5" id="appBody">
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50" id="topBar">
         <div>
             <p class="text-gray-800 font-semibold">📞 +7 (999) 123-45-67</p>
             <a href="https://t.me/yabukaev" target="_blank" class="bg-blue-500 text-white px-3 py-2 rounded mt-2 inline-block">Telegram</a>
@@ -21,15 +21,13 @@
     <div class="container mx-auto relative mt-24">
         <h1 class="text-3xl font-bold mb-5 text-gray-800">Дашборд кафе</h1>
         
-        <!-- Форма авторизации -->
-        <div id="loginForm" class="hidden absolute top-16 right-5 bg-white p-5 shadow-lg rounded-lg w-64">
-            <h2 class="text-lg font-semibold mb-3">Авторизация</h2>
-            <input type="text" id="username" placeholder="Логин" class="w-full mb-2 p-2 border rounded">
-            <input type="password" id="password" placeholder="Пароль" class="w-full mb-2 p-2 border rounded">
-            <button id="submitLogin" class="bg-blue-500 text-white w-full p-2 rounded">Войти</button>
+        <div id="userInfo" class="hidden bg-white p-5 shadow-lg rounded-lg w-64 mb-5">
+            <h2 class="text-lg font-semibold mb-3">Добро пожаловать, <span id="userName"></span></h2>
+            <img id="userPhoto" class="rounded-full w-16 h-16 mb-3" src="" alt="Аватар">
+            <p><strong>ID:</strong> <span id="userId"></span></p>
+            <p><strong>Username:</strong> <span id="userUsername"></span></p>
         </div>
         
-        <!-- График сканирований QR-кодов -->
         <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
             <h2 class="text-xl font-semibold mb-3">Сканирования QR-кодов</h2>
             <canvas id="qrChart"></canvas>
@@ -38,8 +36,7 @@
             <p class="text-gray-600">Осталось QR: <span id="remainingQR">3800</span></p>
         </div>
         
-        <!-- Круговые графики пользователей -->
-        <div class="grid grid-cols-1 md-grid-cols-2 gap-5 mb-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
             <div class="bg-white p-5 rounded-xl shadow-lg">
                 <h2 class="text-xl font-semibold mb-3">Распределение пользователей по полу</h2>
                 <canvas id="genderChart"></canvas>
@@ -49,8 +46,7 @@
                 <canvas id="ageChart"></canvas>
             </div>
         </div>
-        
-        <!-- Таблица пользователей -->
+
         <div class="bg-white p-5 rounded-xl shadow-lg overflow-x-auto">
             <h2 class="text-xl font-semibold mb-3">Список пользователей</h2>
             <table class="w-full border-collapse border border-gray-300 text-xs md:text-sm lg:text-base">
@@ -74,62 +70,23 @@
     </div>
 
     <script>
-        document.getElementById("loginBtn").addEventListener("click", function() {
-            document.getElementById("loginForm").classList.toggle("hidden");
-        });
-
-        document.getElementById("submitLogin").addEventListener("click", function() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-            alert("Логин: " + username + "\nПароль: " + password);
-        });
-
-        // Инициализация графиков
         document.addEventListener("DOMContentLoaded", function() {
-            const qrCtx = document.getElementById("qrChart").getContext("2d");
-            new Chart(qrCtx, {
-                type: "line",
-                data: {
-                    labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-                    datasets: [
-                        {
-                            label: "Сканирования",
-                            data: [12, 19, 3, 5, 2, 3, 7],
-                            borderColor: "#36A2EB",
-                            fill: false
-                        },
-                        {
-                            label: "Новые пользователи",
-                            data: [5, 8, 2, 3, 1, 4, 6],
-                            borderColor: "#FF6384",
-                            fill: false
-                        }
-                    ]
-                }
-            });
-
-            const genderCtx = document.getElementById("genderChart").getContext("2d");
-            new Chart(genderCtx, {
-                type: "doughnut",
-                data: {
-                    labels: ["Мужчины", "Женщины", "Иное"],
-                    datasets: [{
-                        data: [45, 50, 5],
-                        backgroundColor: ["#36A2EB", "#FF6384", "#FFCE56"]
-                    }]
-                }
-            });
-
-            const ageCtx = document.getElementById("ageChart").getContext("2d");
-            new Chart(ageCtx, {
-                type: "doughnut",
-                data: {
-                    labels: ["<18", "18-25", "26-35", "36-45", "46+"],
-                    datasets: [{
-                        data: [10, 30, 25, 20, 15],
-                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"]
-                    }]
-                }
+            const tg = window.Telegram.WebApp;
+            tg.expand();
+            document.body.style.background = tg.themeParams.bg_color || "#f3f4f6";
+            
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const user = tg.initDataUnsafe.user;
+                document.getElementById("userName").textContent = user.first_name + (user.last_name ? " " + user.last_name : "");
+                document.getElementById("userId").textContent = user.id;
+                document.getElementById("userUsername").textContent = user.username || "Не указан";
+                document.getElementById("userPhoto").src = user.photo_url || "https://via.placeholder.com/64";
+                document.getElementById("userInfo").classList.remove("hidden");
+                document.getElementById("loginBtn").classList.add("hidden");
+            }
+            
+            document.getElementById("loginBtn").addEventListener("click", function() {
+                alert("Авторизация происходит через Telegram автоматически.");
             });
         });
     </script>
