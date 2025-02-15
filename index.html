@@ -7,9 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
-<body class="bg-gray-100 p-5" id="appBody">
+<body class="p-5" id="appBody" style="background: linear-gradient(to right, #b2f2bb, #d3f9d8);">
+    <!-- Закрепленный верхний бар -->
     <div class="fixed top-0 left-0 right-0 bg-white shadow-md p-4 flex justify-between items-center z-50" id="topBar">
         <div>
             <p class="text-gray-800 font-semibold">📞 +7 (999) 123-45-67</p>
@@ -21,49 +21,57 @@
     <div class="container mx-auto relative mt-24">
         <h1 class="text-3xl font-bold mb-5 text-gray-800">Дашборд кафе</h1>
         
-        <div id="userInfo" class="hidden bg-white p-5 shadow-lg rounded-lg w-64 mb-5">
-            <h2 class="text-lg font-semibold mb-3">Добро пожаловать, <span id="userName"></span></h2>
-            <img id="userPhoto" class="rounded-full w-16 h-16 mb-3" src="" alt="Аватар">
-            <p><strong>ID:</strong> <span id="userId"></span></p>
-            <p><strong>Username:</strong> <span id="userUsername"></span></p>
-        </div>
-        
+        <!-- График сканирований QR-кодов -->
         <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
             <h2 class="text-xl font-semibold mb-3">Сканирования QR-кодов</h2>
             <canvas id="qrChart"></canvas>
-            <p class="mt-2 text-gray-600">Новые пользователи: <span id="newUsers">120</span></p>
-            <p class="text-gray-600">Всего QR: <span id="totalQR">5000</span></p>
-            <p class="text-gray-600">Осталось QR: <span id="remainingQR">3800</span></p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-            <div class="bg-white p-5 rounded-xl shadow-lg">
-                <h2 class="text-xl font-semibold mb-3">Распределение пользователей по полу</h2>
-                <canvas id="genderChart"></canvas>
-            </div>
-            <div class="bg-white p-5 rounded-xl shadow-lg">
-                <h2 class="text-xl font-semibold mb-3">Распределение пользователей по возрасту</h2>
-                <canvas id="ageChart"></canvas>
+            <!-- Ползунок для масштабирования времени -->
+            <div class="mt-3">
+                <label for="timeRange" class="text-gray-800">Выберите интервал времени (от 1 часа до 1 года):</label>
+                <input type="range" id="timeRange" min="1" max="30" value="7" class="w-full mt-2">
+                <span id="timeRangeValue" class="block text-center">7 дней</span>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-xl shadow-lg overflow-x-auto">
-            <h2 class="text-xl font-semibold mb-3">Список пользователей</h2>
-            <table class="w-full border-collapse border border-gray-300 text-xs md:text-sm lg:text-base">
+        <!-- График Пол -->
+        <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
+            <h2 class="text-xl font-semibold mb-3">Пол</h2>
+            <canvas id="genderChart"></canvas>
+        </div>
+
+        <!-- График Возраст (круговой) -->
+        <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
+            <h2 class="text-xl font-semibold mb-3">Возраст</h2>
+            <canvas id="ageChart"></canvas>
+        </div>
+
+        <!-- Список пользователей -->
+        <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
+            <h2 class="text-xl font-semibold mb-3">Пользователи</h2>
+            <table class="table-auto w-full border-collapse border border-gray-300">
                 <thead>
                     <tr class="bg-gray-200">
-                        <th class="border p-2">ID</th>
-                        <th class="border p-2">Телеграм</th>
-                        <th class="border p-2">Имя Фамилия</th>
-                        <th class="border p-2">Последнее сканирование</th>
-                        <th class="border p-2">Кол-во сканирований</th>
-                        <th class="border p-2">Дата рождения</th>
-                        <th class="border p-2">Возраст</th>
-                        <th class="border p-2">Пол</th>
+                        <th class="border border-gray-300 px-4 py-2">ID</th>
+                        <th class="border border-gray-300 px-4 py-2">Ссылка</th>
+                        <th class="border border-gray-300 px-4 py-2">Имя Фамилия</th>
+                        <th class="border border-gray-300 px-4 py-2">Пол</th>
+                        <th class="border border-gray-300 px-4 py-2">Возраст</th>
+                        <th class="border border-gray-300 px-4 py-2">Дата рождения</th>
+                        <th class="border border-gray-300 px-4 py-2">Дата сканирования</th>
+                        <th class="border border-gray-300 px-4 py-2">Кол-во сканирований</th>
                     </tr>
                 </thead>
-                <tbody id="userTable">
-                    <!-- Данные будут загружены динамически -->
+                <tbody>
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">1</td>
+                        <td class="border border-gray-300 px-4 py-2"><a href="#" class="text-blue-500">@ivan</a></td>
+                        <td class="border border-gray-300 px-4 py-2">Иван Иванов</td>
+                        <td class="border border-gray-300 px-4 py-2">Мужчина</td>
+                        <td class="border border-gray-300 px-4 py-2">25</td>
+                        <td class="border border-gray-300 px-4 py-2">01.01.1999</td>
+                        <td class="border border-gray-300 px-4 py-2">10.02.2025</td>
+                        <td class="border border-gray-300 px-4 py-2">15</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -71,23 +79,82 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const tg = window.Telegram.WebApp;
-            tg.expand();
-            document.body.style.background = tg.themeParams.bg_color || "#f3f4f6";
-            
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const user = tg.initDataUnsafe.user;
-                document.getElementById("userName").textContent = user.first_name + (user.last_name ? " " + user.last_name : "");
-                document.getElementById("userId").textContent = user.id;
-                document.getElementById("userUsername").textContent = user.username || "Не указан";
-                document.getElementById("userPhoto").src = user.photo_url || "https://via.placeholder.com/64";
-                document.getElementById("userInfo").classList.remove("hidden");
-                document.getElementById("loginBtn").classList.add("hidden");
-            }
-            
-            document.getElementById("loginBtn").addEventListener("click", function() {
-                alert("Авторизация происходит через Telegram автоматически.");
+            // График "Сканирования QR-кодов"
+            const qrChart = new Chart(document.getElementById("qrChart").getContext("2d"), {
+                type: "line",
+                data: {
+                    labels: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
+                    datasets: [
+                        {
+                            label: "Сканирования",
+                            data: [35, 19, 35, 25, 75, 65, 34, 20, 45, 65, 30, 70, 55, 40, 50, 30, 60, 70, 55, 45, 65, 70, 55, 75, 60, 40, 30, 50, 65, 80, 90],
+                            borderColor: "#36A2EB",
+                            fill: false
+                        },
+                        {
+                            label: "Новые пользователи",
+                            data: [5, 8, 2, 3, 1, 4, 6, 8, 9, 5, 6, 7, 4, 5, 8, 6, 5, 6, 7, 6, 4, 5, 6, 7, 5, 6, 5, 6, 5, 6, 8],
+                            borderColor: "#FF6384",
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: { beginAtZero: true },
+                        y: { beginAtZero: true }
+                    }
+                }
             });
+
+            // График "Пол"
+            new Chart(document.getElementById("genderChart").getContext("2d"), {
+                type: "pie",
+                data: {
+                    labels: ["Мужчины", "Женщины"],
+                    datasets: [{
+                        data: [60, 40],
+                        backgroundColor: ["#36A2EB", "#FF6384"]
+                    }]
+                }
+            });
+
+            // График "Возраст"
+            new Chart(document.getElementById("ageChart").getContext("2d"), {
+                type: "doughnut",
+                data: {
+                    labels: ["18-24", "25-34", "35-44", "45+"],
+                    datasets: [{
+                        label: "Возраст",
+                        data: [20, 30, 25, 25],
+                        backgroundColor: ["#FFCE56", "#36A2EB", "#FF6384", "#4BC0C0"]
+                    }]
+                }
+            });
+
+            // Обработка ползунка для выбора временного интервала
+            const timeRange = document.getElementById('timeRange');
+            const timeRangeValue = document.getElementById('timeRangeValue');
+
+            timeRange.addEventListener('input', function() {
+                const timeValue = timeRange.value;
+                timeRangeValue.textContent = `${timeValue} дней`;
+                
+                // Обновление данных на графике в зависимости от выбранного интервала времени
+                // В реальном приложении можно заменить данные с учетом времени
+                qrChart.data.labels = generateLabels(timeValue);
+                qrChart.update();
+            });
+
+            // Генерация меток для временного интервала
+            function generateLabels(days) {
+                let labels = [];
+                for (let i = 0; i < days; i++) {
+                    labels.push(`День ${i + 1}`);
+                }
+                return labels;
+            }
         });
     </script>
 </body>
