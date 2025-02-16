@@ -45,37 +45,50 @@
             <canvas id="ageChart"></canvas>
         </div>
 
-        <!-- Список пользователей -->
-        <div class="bg-white p-5 rounded-xl shadow-lg mb-5">
-            <h2 class="text-xl font-semibold mb-3">Пользователи</h2>
-            <table class="table-auto w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border border-gray-300 px-4 py-2">ID</th>
-                        <th class="border border-gray-300 px-4 py-2">Ссылка</th>
-                        <th class="border border-gray-300 px-4 py-2">Имя Фамилия</th>
-                        <th class="border border-gray-300 px-4 py-2">Пол</th>
-                        <th class="border border-gray-300 px-4 py-2">Возраст</th>
-                        <th class="border border-gray-300 px-4 py-2">Дата рождения</th>
-                        <th class="border border-gray-300 px-4 py-2">Дата сканирования</th>
-                        <th class="border border-gray-300 px-4 py-2">Кол-во сканирований</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">1</td>
-                        <td class="border border-gray-300 px-4 py-2"><a href="#" class="text-blue-500">@ivan</a></td>
-                        <td class="border border-gray-300 px-4 py-2">Иван Иванов</td>
-                        <td class="border border-gray-300 px-4 py-2">Мужчина</td>
-                        <td class="border border-gray-300 px-4 py-2">25</td>
-                        <td class="border border-gray-300 px-4 py-2">01.01.1999</td>
-                        <td class="border border-gray-300 px-4 py-2">10.02.2025</td>
-                        <td class="border border-gray-300 px-4 py-2">15</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+   <!-- Список пользователей -->
+<div class="bg-white p-5 rounded-xl shadow-lg mb-5">
+    <h2 class="text-xl font-semibold mb-3">Пользователи</h2>
+    <div class="overflow-y-auto" style="max-height: 500px;"> <!-- Прокрутка данных -->
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 px-4 py-2">ID</th>
+                    <th class="border border-gray-300 px-4 py-2">Ссылка</th>
+                    <th class="border border-gray-300 px-4 py-2">Имя Фамилия</th>
+                    <th class="border border-gray-300 px-4 py-2">Пол</th>
+                    <th class="border border-gray-300 px-4 py-2">Возраст</th>
+                    <th class="border border-gray-300 px-4 py-2">Дата рождения</th>
+                    <th class="border border-gray-300 px-4 py-2">Дата сканирования</th>
+                    <th class="border border-gray-300 px-4 py-2">Кол-во сканирований</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">1</td>
+                    <td class="border border-gray-300 px-4 py-2"><a href="#" class="text-blue-500">@ivan</a></td>
+                    <td class="border border-gray-300 px-4 py-2">Иван Иванов</td>
+                    <td class="border border-gray-300 px-4 py-2">Мужчина</td>
+                    <td class="border border-gray-300 px-4 py-2">25</td>
+                    <td class="border border-gray-300 px-4 py-2">01.01.1999</td>
+                    <td class="border border-gray-300 px-4 py-2">10.02.2025</td>
+                    <td class="border border-gray-300 px-4 py-2">15</td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-300 px-4 py-2">2</td>
+                    <td class="border border-gray-300 px-4 py-2"><a href="#" class="text-blue-500">@olga</a></td>
+                    <td class="border border-gray-300 px-4 py-2">Ольга Смирнова</td>
+                    <td class="border border-gray-300 px-4 py-2">Женщина</td>
+                    <td class="border border-gray-300 px-4 py-2">30</td>
+                    <td class="border border-gray-300 px-4 py-2">15.05.1994</td>
+                    <td class="border border-gray-300 px-4 py-2">11.02.2025</td>
+                    <td class="border border-gray-300 px-4 py-2">20</td>
+                </tr>
+                <!-- Можно добавить больше строк здесь -->
+            </tbody>
+        </table>
     </div>
+</div>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
