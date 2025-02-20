@@ -1,0 +1,46 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+# Skipping the docker login step
+before_script:
+  - echo "Skipping docker login, working locally"
+  - git remote set-url origin https://g.oruell.us/Barmem/qr-restaurnats.git
+
+
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    # Build the Docker image locally
+    - echo "tying to build"
+    - docker build -t my-local-image:$CI_COMMIT_SHA .
+    # Optionally, you can tag it as 'latest' as well
+    - docker tag my-local-image:$CI_COMMIT_SHA my-local-image:latest
+  only:
+    - release
+  tags:
+    - release
+
+deploy:
+  stage: deploy
+  image: docker/compose:1.29.2
+  services:
+    - docker:dind
+  script:
+    # Use the locally built image
+    - docker-compose down
+    - docker-compose up -d --build
+  only:
+    - release
+  tags:
+    - release
+
+after_script:
+  # No need to logout if login was skipped
+  - echo "Skipping docker logout"

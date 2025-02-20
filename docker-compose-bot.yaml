@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+#   db:
+#     image: postgres:15
+#     container_name: postgres_db
+#     environment:
+#       POSTGRES_USER: barmem
+#       POSTGRES_PASSWORD: "91083423"
+#       POSTGRES_DB: caffee-project
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     networks:
+#       - app_network
+#     ports:
+#       - "5433:5432"  # Expose port 5432 to the host machine
+#     restart: unless-stopped
+
+  # web:
+  #   image: python:3.10
+  #   container_name: web_service
+  #   command: python3 web.py
+  #   volumes:
+  #     - ./web:/app
+  #   working_dir: /app
+  #   ports:
+  #     - "5000:5000"  # Bind port 5000 to the host
+  #   networks:
+  #     - app_network
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_USER=barmem
+  #     - DB_PASSWORD=91083423
+  #     - DB_NAME=caffee-project
+  #     - LANG=ru_RU.UTF-8
+  #     - LC_ALL=ru_RU.UTF-8
+
+  #   entrypoint: >
+  #     sh -c "apt-get update && \
+  #           apt-get install -y locales && \
+  #           sed -i -e 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen && \
+  #           locale-gen ru_RU.UTF-8 && \
+  #           update-locale LANG=ru_RU.UTF-8 && \
+  #           dpkg-reconfigure --frontend=noninteractive locales && \
+  #           export LANG=ru_RU.UTF-8 && \
+  #           export LC_ALL=ru_RU.UTF-8 && \
+  #           pip3 install -r requirements.txt && \
+  #           python3 web.py"
+  #   restart: unless-stopped
+
+
+#_____________________________________________________
+  tgbot:
+    image: python:3.10
+    container_name: telegram_bot
+    command: python3 run.py
+    volumes:
+      - ./bot:/app
+    working_dir: /app
+#    networks:
+#      - app_network
+    # depends_on:
+    #   - db
+    environment:
+      - DB_HOST=r.oruell.us
+      - DB_PORT=5433
+      - DB_USER=barmem
+      - DB_PASSWORD=91083423
+      - DB_NAME=caffee-project
+    entrypoint: >
+      sh -c "pip3 install -r requirements.txt &&
+             python3 run.py"
+    restart: unless-stopped
+
+
+# networks:
+#   app_network:
+#     driver: bridge
+
+# volumes:
+#   postgres_data:
